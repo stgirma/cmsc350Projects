@@ -1,42 +1,48 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-
 public class Hierarchy<V> implements DFSActions<V> {
 
 	StringBuilder outPutString = new StringBuilder();
-	Queue<String> outPut = new LinkedList<>();
-	
+	Queue<String> outPutQueue = new LinkedList<>();
+	String indent = "";
+
 	@Override
 	public void cycleDetected() {
-		outPut.add("*");
-		outPutString.append("*");
+		outPutQueue.add(" *");
 	}
 
 	@Override
 	public void processVertex(V v) {
-		outPut.add(v.toString());	
-		outPutString.append(v.toString());
+		outPutQueue.add(indent + v.toString());
 	}
 
 	@Override
 	public void descend(V v) {
-		outPut.add("(");
-		outPutString.append("(");
+		indent = indent + "    ";
+
 	}
 
 	@Override
 	public void ascend(V v) {
-		outPut.add("");
-		outPutString.append("");
-		
+		indent = indent.substring(4);
+
 	}
 
 	@Override
 	public String toString() {
-		
-		return outPutString.toString();
-	}
 
+		StringBuilder outPutString = new StringBuilder();
+		for (String nextString : outPutQueue) {
+				if (!nextString.equals(" *"))
+					outPutString.append("\n");
+			
+			outPutString.append(nextString);
+		}
+		outPutString.append("\n");
+
+		return outPutString.toString();
+
+	}
 
 }

@@ -3,42 +3,53 @@ import java.util.Queue;
 
 public class ParenthesizedList<V> implements DFSActions<Object> {
 
-	public Queue<String> outPut = new LinkedList<>();
+	StringBuilder outPutString = new StringBuilder();
+	Queue<String> outPutQueue = new LinkedList<>();
+	String indent = "";
 	
 	@Override
 	public void cycleDetected() {
-		outPut.add("*");
+		outPutQueue.add("*");
 	}
 
-	
 	@Override
 	public void processVertex(Object v) {
-		// TODO Auto-generated method stub
+		outPutQueue.add(v.toString());
 		
 	}
-
-
 
 	@Override
 	public void descend(Object v) {
-		// TODO Auto-generated method stub
+		outPutQueue.add("(");
 		
 	}
-
 
 
 	@Override
 	public void ascend(Object v) {
-		// TODO Auto-generated method stub
+		outPutQueue.add(")");
+		//indent = indent.substring(4);
 		
 	}
-	
 
+	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		
-		return sb.toString();
+		StringBuilder outPutString = new StringBuilder();
+		outPutString.append("( ");
+		for (String nextString : outPutQueue) {
+			
+			outPutString.append(" "+nextString+" ");
+			
+		}
+		outPutString.append(" )");
+
+		String returnString = outPutString.toString();
+		returnString = returnString.replace("  (  *  )  ", " * ");
+		returnString = returnString.replace("  (  )  ", " ");
+
+		return returnString;
+
 	}
 
 }

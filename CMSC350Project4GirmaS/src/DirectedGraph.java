@@ -3,23 +3,17 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.time.temporal.TemporalAdjuster;
 import java.util.*;
 
 public class DirectedGraph<V> {
 	
 	static class Node{
 		String nodeName;
+		Node nextNode;
 		LinkedList<Node> dependents = new LinkedList<>();
 		Node(String nodeName){
 			this.nodeName = nodeName;
-			this.dependents = dependents;
-		}
-		
-		public LinkedList<Node> getDependents() {
-			return dependents;
-		}
-
-		public void setDependents(LinkedList<Node> dependents) {
 			this.dependents = dependents;
 		}
 
@@ -33,83 +27,59 @@ public class DirectedGraph<V> {
 	ParenthesizedList parenthesized = new ParenthesizedList();
 	
 	public V headNode = null;
-	//Set<V> visited = new HashSet<V>();
-	ArrayList<V> visited = new ArrayList<V>();
-	Set<V> discovered = new HashSet<V>();
+	public Set<V> visited = new HashSet<V>();
+	public Set<V> discovered = new HashSet<V>();
 	boolean isCircular = false;
 	ArrayList<V> unreachableList = new ArrayList<V>();
 	
-	public ArrayList<LinkedList<V>> adjacencyList = new ArrayList<LinkedList<V>>();
+
 	
+	public LinkedList<V> adjacencyList = new LinkedList<V>();
+	Node currentNode=null;
 	public void printAdjacencyList() {
-		for (int i = 0; i < adjacencyList.size(); i++) {
-			for (int j = 0; j < adjacencyList.get(i).size(); j++) {
-
-				}
-			//System.out.println("printing "+ adjacencyList.get(i));
-			printLinkedList((LinkedList<Node>) adjacencyList.get(i));
-			}
-			
+		for (V v : adjacencyList) {
+			currentNode = (Node)v;
+			System.out.println("Node: " + currentNode.toString() + "=> " + currentNode.dependents);
 		}
-	
-	public void printLinkedList(LinkedList<Node> linkedList) {
-		linkedList.forEach((nd) ->{
-			//System.out.println(nd.toString());
-			//System.out.println(nd.dependents.toString());
 			
-		});
 	}
 	
-	/*
-	public Node getNode(Node node) {
-		Node foundNode = null;
-		for (int i = 0; i < adjacencyList.size(); i++) {
-			if(node.equals(adjacencyList.get(i).getFirst()))
-				foundNode = node;
-			foundNode = null;
-		}
-		return foundNode;
-	}
-
-	
-	public Node getNode(Node node) {
-		LinkedList<Node> ll = new LinkedList();
-		Node foundNode = null;
-		for (int i = 0; i < adjacencyList.size(); i++) {
-			
-			adjacencyList.get(i).forEach((Node)(nd) ->{
-				
-			});
-			
-			
-			
-			if(node.equals(adjacencyList.get(i).getFirst()))
-				foundNode = node;
-			foundNode = null;
-		}
-		return foundNode;
-	}
-		*/
 	public void addDependency(Node dependency) {
-		LinkedList<V> dependencyList = new LinkedList();
-		dependencyList.add((V) dependency);
-		adjacencyList.add(dependencyList);
-		
-		
-		//System.out.println("Dependency list size is now " + dependencyList.size());
-		//System.out.println("AdjacencyList list size is now " + adjacencyList.size());
-		
-		
-
+		if(adjacencyList==null || !adjacencyList.contains(dependency)) {
+			adjacencyList.add((V) dependency);
+		}
 	}
 	
 	public void addDependent(Node dependency, Node dependent) {
-		adjacencyList.forEach((nodeLL) ->{
-			if(nodeLL.getFirst()==dependency)
-				dependency.dependents.addLast(dependent);
-		});
+		Node tempNode = getNode(dependent.nodeName);
+		if(tempNode!=null) {
+			//System.out.println("tempNode is : "+tempNode.nodeName);
+			dependent = tempNode;
+		}
+		//System.out.println(dependent.nodeName +" is added to  "+dependency.nodeName);
+		dependency.dependents.add(dependent);
+	}
+
+	public Node getNode(String className) {	
+		
+		for (V v : adjacencyList) {
+			Node foundNode = (Node)v;
+			if(foundNode.nodeName.equals(className))
+				return foundNode;	
+		}
+		return null;
 	}
 	
+	public void test() {
+		Node tempNode;
+		tempNode = getNode("ClassB");
+		if(tempNode!=null) {
+			System.out.println("tempNode is" + tempNode);
+			System.out.println("tempNode dependentsa are" + tempNode.dependents);
+		}else {
+			System.out.println("tempNode.dependets are null");
+		}
+	}
 	public void depthFirstSearch() {
 		isCircular = false;
 		depthFirsSearchHelper(headNode);
@@ -118,79 +88,74 @@ public class DirectedGraph<V> {
 	private void depthFirsSearchHelper(V node) {
 		if(discovered.contains(node)) {
 			isCircular = true;
+			//System.out.println("Cycle detected: " + node);
 			hierarchy.cycleDetected();
 			parenthesized.cycleDetected();	
 			return;
 		}
+		//System.out.println("dfs method started for: " + node);
+		hierarchy.processVertex(node);
+		parenthesized.processVertex(node);
 		
-		hierarchy.processVertex((DirectedGraph.Node) node);
-		parenthesized.processVertex((DirectedGraph.Node) node);
+		hierarchy.descend(node);
+		parenthesized.descend(node);
 		
-		hierarchy.descend((DirectedGraph.Node) node);
-		parenthesized.descend((DirectedGraph.Node) node);
-		
+
 		discovered.add(node);
 		visited.add(node);
-		
-		Node currentNode = null;
-		currentNode = (Node) node;
-		LinkedList<V> dependentList = (LinkedList<V>)getDependentsList(currentNode);
-		try {
-			
-			System.out.println("current node: " +currentNode.nodeName);
-			System.out.println("current node dependents: " + dependentList);
-		}catch(Exception e) {
-			
-		}
-	
-		
-		//LinkedList<V> dependentList = (LinkedList<V>)currentNode.dependents;
-		//System.out.println("current node dependents: " +currentNode.dependents);
-		dependentList.forEach((dependentNode) ->{
-			if(dependentNode != null)
-				depthFirsSearchHelper(dependentNode);
-			
-		});
-	}
-	
-	public LinkedList<Node> getDependentsList(Node n) {
-		LinkedList<V> dependencyList = new LinkedList();
 
-		for (int i = 0; i < adjacencyList.size(); i++) {
-			Node indexedNode=null;
-			
-			for (int j = 0; j < adjacencyList.get(i).size(); j++) {
-				indexedNode = (DirectedGraph.Node) adjacencyList.get(i).get(j);
-				if(n.nodeName == indexedNode.nodeName) {
-					System.out.println("Getting dependents for node "+ indexedNode.nodeName);
-					return indexedNode.dependents;
-				}	
-			}	
+		
+		Node currentNode = (Node) node;
+		// System.out.println("currentNode name is: " + currentNode.nodeName);
+		currentNode = getNode(currentNode.nodeName);
+		// System.out.println("returned currentNode dependents are: " +
+		// currentNode.dependents);
+		// System.out.println("currentNode is " +currentNode);
+		if (currentNode != null) {
+			LinkedList<Node> currentDependentList = currentNode.dependents;
+			//System.out.println("Dependents for currentNode are " + currentDependentList);
+
+			for (int i = 0; i < currentDependentList.size(); i++) {
+				//System.out.println("Running dfs on dependent " + currentDependentList.get(i));
+				depthFirsSearchHelper((V) currentDependentList.get(i));
+			}
 		}
-				 
-		return null;
+		//System.out.println("Exited recursion loop");
+		hierarchy.ascend(node);
+		parenthesized.ascend(node);
+		discovered.remove(node);
+
+		//System.out.println(hierarchy.toString());
 	}
 	
 	
-	public void getUnreachableList() {
+	
+	public ArrayList<V> getUnreachableList() {
+
+		Node currentNode;
+		Set<Node> visitedNodes = (Set<Node>)visited;
 		for (int i = 0; i < adjacencyList.size(); i++) {
-			for (int j = 0; j < adjacencyList.get(i).size(); j++) {
-				if(!visited.contains(adjacencyList.get(i).get(j))) {
-					unreachableList.add(adjacencyList.get(i).get(j));
-					Node currentNode = (Node)adjacencyList.get(i).get(j);
-					LinkedList<Node> dependentList = currentNode.dependents;
-					for (Node n : dependentList) {
-						if(!visited.contains((V)n))
-							unreachableList.add((V)n);
-					}
-					
+			currentNode = (Node) adjacencyList.get(i);
+			if(!visitedNodes.contains(currentNode)) {
+				unreachableList.add((V) currentNode);
+				visitedNodes.add(currentNode);
+			}
+			
+			LinkedList<Node> dependentsList =  currentNode.dependents;
+			for (int j = 0; j < dependentsList.size(); j++) {
+				if(!visitedNodes.contains(dependentsList.get(j))) {
+					unreachableList.add((V) dependentsList.get(j));
+					visitedNodes.add(currentNode);
 				}
+				
 			}
 			
 		}
-	}
 		
-
+		
+		
+		return unreachableList;
+	}
 }
 
 
