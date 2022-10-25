@@ -1,3 +1,11 @@
+/**
+ * OrderList.java - this class performs two methods checkSorted (overloaded methods). 
+ * 
+ * @author  Girma, Senay
+ * @version 1.0 10/24/2022
+ * Project 2
+ */
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -39,7 +47,8 @@ public class OrderedList{
 	 * checkSorted a utility class with two overloaded implementations of checkSorted method to check if the list 
 	 * read from the input file is in proper format (terms are ordered in correct order)
 	 * 
-	 * @param List<T> list of string read from the file that represent the polynomial
+	 * @param polynomialList List<T> list of string read from the file that represent the polynomial
+	 * @param compareByExponent comparator<Polynomial>
 	 */
 	public static <T> boolean checkSorted(ArrayList<Polynomial> polynomialList, Comparator<Polynomial.PolynomialTerm> compareByExponent) {
 		if(polynomialList.size() == 1) {

@@ -1,3 +1,11 @@
+/**
+ * Polynomial.java - this class defines the polynomial class. the constructor accepts a string and constructs a polynomial
+ * from that string.
+ * 
+ * @author  Girma, Senay
+ * @version 1.0 10/24/2022
+ * Project 2
+ */
 import java.util.Iterator;
 
 public class Polynomial implements Iterable<Polynomial.PolynomialTerm>, Comparable<Polynomial> {
@@ -26,7 +34,7 @@ public class Polynomial implements Iterable<Polynomial.PolynomialTerm>, Comparab
 				}	
 				}catch(NumberFormatException e) {
 					throw new InvalidPolynomialSyntax("A non-numerical character is suplied");
-					//throw e;
+	
 				}
 			}else {
 			throw new InvalidPolynomialSyntax("A coefficient or an exponent is missing");
