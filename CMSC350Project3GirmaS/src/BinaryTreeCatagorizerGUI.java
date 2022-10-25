@@ -1,3 +1,11 @@
+ /**
+ * BinaryTreeCatagorizerGUI.java - Main class a class where all user interface is implemented to enter value to 
+ * be converted and checked for certain properties. 
+ * 
+ * @author  Girma, Senay
+ * @version 1.0 10/24/2022
+ * Project 3
+ */
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -7,7 +15,10 @@ public class BinaryTreeCatagorizerGUI extends JFrame implements ActionListener {
 	private JTextField inputBinaryTreeTextField, resultBinaryTreeTextField;
 	private JLabel inputFieldLabel, resultFieldLabel;
 	
-	
+	/**
+	 * Constructor - The constructor defines the GUI window and all components that go on it.
+	 * 
+	 */
 	public BinaryTreeCatagorizerGUI() {
 		// create labels
 		inputFieldLabel = new JLabel("Enter Tree: ");
@@ -51,7 +62,12 @@ public class BinaryTreeCatagorizerGUI extends JFrame implements ActionListener {
 		
 	}
 	
-
+	/**
+	 * addComponentsToPanel - Places the components defined in the constructor this method creates a panel and places
+	 * each components on the respective panels
+	 * 
+	 * @param components: components defined in constructor.
+	 */
 	private void addComponentsToPanel(JComponent[] components) {
 		JPanel panel = new JPanel();
 		panel.setLayout(new FlowLayout());
@@ -61,6 +77,13 @@ public class BinaryTreeCatagorizerGUI extends JFrame implements ActionListener {
 		add(panel);
 	}
 
+	/**
+	 * actionPerformed - overridden actionPerformed method that comes with ActionListner. Listens to events from the 
+	 * buttons and calls respective methods for each. User input in the textfield is also done here to ensure null or 
+	 * empty space is not provided by user.
+	 * 
+	 * @param e: ActionEvent item
+	 */
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		//get user provided expression
@@ -134,7 +157,7 @@ public class BinaryTreeCatagorizerGUI extends JFrame implements ActionListener {
 			}
 	}
 
-
+	//main method to instantiate the main class and set dialog window visible.
 	public static void main(String[] args) {
 		BinaryTreeCatagorizerGUI binaryTreeGUI = new BinaryTreeCatagorizerGUI();
 		binaryTreeGUI.setVisible(true);

@@ -3,10 +3,9 @@
  * and multiple methods to access and manipulate properties of a object with
  * binary tree structure.
  * 
- * @author Girma, Senay
- * @version 1.0 10/18/2022
- * 
- *          Project 3
+ * @author  Girma, Senay
+ * @version 1.0 10/24/2022
+ * Project 3
  */
 
 public class BinaryTree {
@@ -177,9 +176,9 @@ public class BinaryTree {
 	}
 
 	/**
-	 * height method returns the height of the tree. The height is the longest path from the root to any leaf node. 
-	 * This method calls a helper function that performs a recursive check on the root node provided as parameter. 
-	 * This method is called from the "height" button on the GUI
+	 * inorder method checks if the polynomial is in order and returns a boolean. This method calls a helper function
+	 * that performs a recursive check on the polynomial object. This method is called from the "inOrder" button
+	 * on the GUI.
 	 * 
 	 */ 
 	public static String inorder() {
@@ -187,6 +186,10 @@ public class BinaryTree {
 		return inOrderHelper(root, sb);
 	}
 
+	/**
+	 * countNodes method returns the total number of nodes
+	 * 
+	 */ 
 	private static int countNodes(Node node) {
 
 		if (node == null) {
@@ -196,6 +199,11 @@ public class BinaryTree {
 		}
 	}
 
+	/**
+	 * heightHelper method checks each side of the nodes for the longest path by recursively calling itself. the maximum 
+	 * of the two sides is returned back.
+	 * 
+	 */ 
 	private static int heightHelper(Node node) {
 		if (node == null) {
 			return 0;
@@ -205,6 +213,12 @@ public class BinaryTree {
 
 	}
 
+	/**
+	 * isBalanced method checks if the binary tree is balance. A binary tree is balanced when the absolute difference
+	 * of the height of the left and right subtrees at any node is less then 1. Height is obtained using heightHelper
+	 * method. Balance only happens when each side of the tree is balanced and the whole tree is balanced. 
+	 * 
+	 */ 
 	private static boolean isBalancedHelper(Node node) {
 		if (node == null) {
 			return true;
@@ -220,23 +234,36 @@ public class BinaryTree {
 		return false;
 	}
 
+	/**
+	 * inOrderHelper method starts with empty stringBuilder provided as parameter and recursively constructs ordered
+	 * tree from left to right.
+	 * 
+	 * @param node the Node object (the root)
+	 * @param sb string builder. string builder is appended at each recursion and the base case returns the final string
+	 * 
+	 */ 
 	private static String inOrderHelper(Node node, StringBuilder sb) {
 		if (node == null) {
 			return "";
 		} else {
-			System.out.print(" ( ");
 			sb.append(" ( ");
 			inOrderHelper(node.leftNode, sb);
-			System.out.print(node.data);
 			sb.append(node.data);
 			inOrderHelper(node.rightNode, sb);
-			System.out.print(" ) ");
 			sb.append(" ) ");
 		}
 
 		return sb.toString();
 	}
 
+	/**
+	 * isFullHelper binary tree is full when every node other than the leaves has two children. To calculate if that's the
+	 * case find the maximum height the tree can have for it's number of nodes and if it's equal to the number of nodes, 
+	 * then it's full. Maximum height for a given node is calculated using 2^height - 1. 
+	 * 
+	 * @param node the Node object (the root)
+	 * 
+	 */ 
 	private static boolean isFullHelper(Node node) {
 		int height = heightHelper(node);
 		int nodeCount = countNodes(node);
@@ -248,6 +275,13 @@ public class BinaryTree {
 
 	}
 
+	/**
+	 * isProper a proper binary tree where all the leaves have the same depth. we recursively compare the right and left node
+	 * if it's not proper one side becomes null before the other we return false. 
+	 * 
+	 * @param node the Node object (the root)
+	 * 
+	 */ 
 	private static boolean isProperHelper(Node node) {
 		if (node == null)
 			return true;
