@@ -1,3 +1,12 @@
+/**
+ * CMSC350Project4GirmaS.java - Main class to get user to select a class dependency file. This class instantiates and
+ * implements DirectedGraph, Hierarchy, and ParenthesizedList classes to get all the formated dependency representation.
+ * 
+ * @author  Girma, Senay
+ * @version 1.0 10/24/2022
+ * Project 4
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -9,6 +18,11 @@ public class ClassDependencyViewer {
 
 	static DirectedGraph graph = new DirectedGraph();
 
+	/**
+	 * readDependencyFromFile - Method to give user the ability to select a file. the method reads each line of the file
+	 * and convert it to string array. Each array entry is converted Node object and added to LinkedList 
+	 * 
+	 */
 	public void readDependencyFromFile() {
 
 		File inputFile = null;
@@ -27,6 +41,10 @@ public class ClassDependencyViewer {
 			Scanner dependenceReader = new Scanner(inputFile);
 			Scanner dependentReader = new Scanner(inputFile);
 
+			/*The file is read twice. on the first run, 0th index of every line is used to instantiate the "dependency"
+			 * object and on the second run, the rest of the line are added as dependent object to the respective dependency.
+			 * 
+			 * */
 			while (dependenceReader.hasNextLine()) {
 
 				String dependencyString = dependenceReader.nextLine();
@@ -34,7 +52,7 @@ public class ClassDependencyViewer {
 
 				DirectedGraph.Node dependencyNode = new DirectedGraph.Node(dependencyListArray[0]);
 
-				if (graph.headNode == null) {
+				if (graph.headNode == null) {//this is done only once to assign the head node, which is used to start the search.
 					graph.headNode = dependencyNode;
 					graph.adjacencyList.add(dependencyNode);
 				} else if (!graph.adjacencyList.contains(dependencyNode)) {
@@ -68,31 +86,30 @@ public class ClassDependencyViewer {
 
 	}
 
+	/**
+	 * Main - Main method of the program, which instantiates all the classes in the program and runs all result
+	 * display.
+	 * 
+	 * @param args: default argument list string array: Not used.
+	 */
 	public static void main(String[] args) {
 		ClassDependencyViewer classDependencyViewr = new ClassDependencyViewer();
-		// Hierarchy h = new Hierarchy();
 		classDependencyViewr.readDependencyFromFile();
-		// graph.printAdjacencyList();
-		// graph.test();
-
+		
 		graph.depthFirstSearch();
-		// System.out.println(graph.parenthesized.toString());
-		// System.out.println(graph.hierarchy.toString());
 
-		System.out.println("================================================");
+		System.out.println("=============================================================");
+		System.out.println("Hierarchical representation of Class Dependency:");
 
 		System.out.println(graph.hierarchy.toString());
 
-		System.out.println("================================================");
+		System.out.println("=============================================================");
+		System.out.println("Parenthesized List representation of Class Dependency:");
 
 		System.out.println(graph.parenthesized.toString());
-		// System.out.println(graph.visited.size());
-
-		// System.out.println("Discovered: " + graph.discovered);
-		// System.out.println("Visited: " + graph.visited);
 
 		System.out.println("finished running");
-		// System.out.println("UnreachableList: " + graph.getUnreachableList());
+
 	}
 
 }
